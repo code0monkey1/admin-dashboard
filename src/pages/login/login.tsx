@@ -1,8 +1,36 @@
-import { Layout, Card, Space, Input, Form, Checkbox, Button, Flex } from "antd";
+import {
+  Layout,
+  Card,
+  Space,
+  Input,
+  Form,
+  Checkbox,
+  Button,
+  Flex,
+  Alert,
+} from "antd";
 import { LockFilled, UserOutlined, LockOutlined } from "@ant-design/icons";
 import Logo from "../../components/icons/Logo";
+import { Credentials } from "../../types";
+import { login } from "../../http/api";
+import { useMutation } from "@tanstack/react-query";
 
 const LoginPage = () => {
+  const loginUser = async (credentials: Credentials) => {
+    const { data } = await login(credentials);
+    return data;
+  };
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: loginUser,
+    onSuccess: async () => {
+      console.log("Login Successful");
+    },
+  });
+
+  console.log("error is", error);
+
   return (
     <>
       <Layout
@@ -37,7 +65,18 @@ const LoginPage = () => {
               initialValues={{
                 remember: true,
               }}
+              onFinish={(values) => {
+                console.log(values);
+                mutate({ email: values.username, password: values.password });
+              }}
             >
+              {isError && (
+                <Alert
+                  message={error.message}
+                  type="error"
+                  style={{ marginBottom: "1rem" }}
+                />
+              )}
               <Form.Item
                 name="username"
                 rules={[
@@ -65,16 +104,17 @@ const LoginPage = () => {
                   Forgot Password
                 </a>
               </Flex>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{ width: "100%" }}
+                  loading={isPending}
+                >
+                  Log in
+                </Button>
+              </Form.Item>
             </Form>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ width: "100%" }}
-              >
-                Log in
-              </Button>
-            </Form.Item>
           </Card>
         </Space>
       </Layout>

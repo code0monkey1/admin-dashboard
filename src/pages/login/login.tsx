@@ -12,10 +12,26 @@ import {
 import { LockFilled, UserOutlined, LockOutlined } from "@ant-design/icons";
 import Logo from "../../components/icons/Logo";
 import { Credentials } from "../../types";
-import { login } from "../../http/api";
-import { useMutation } from "@tanstack/react-query";
+import { self, login } from "../../http/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const LoginPage = () => {
+  const getSelf = async () => {
+    const { data } = await self();
+
+    console.log("User data retrieved", JSON.stringify(data, null, 2));
+
+    return data;
+  };
+
+  const { data: userData, refetch } = useQuery({
+    queryKey: ["self"],
+    queryFn: getSelf,
+    enabled: false,
+  });
+
+  console.log("The user info is", JSON.stringify(userData, null, 2));
+
   const loginUser = async (credentials: Credentials) => {
     const { data } = await login(credentials);
     return data;
@@ -25,6 +41,7 @@ const LoginPage = () => {
     mutationKey: ["login"],
     mutationFn: loginUser,
     onSuccess: async () => {
+      refetch();
       console.log("Login Successful");
     },
   });
@@ -77,6 +94,7 @@ const LoginPage = () => {
                   style={{ marginBottom: "1rem" }}
                 />
               )}
+
               <Form.Item
                 name="username"
                 rules={[

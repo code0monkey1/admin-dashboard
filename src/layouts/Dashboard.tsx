@@ -1,6 +1,16 @@
 import { NavLink, Navigate, Outlet } from "react-router-dom";
 import { useAuthStore } from "../store";
-import { Layout, Menu, theme } from "antd";
+
+import {
+  Avatar,
+  Badge,
+  Dropdown,
+  Flex,
+  Layout,
+  Menu,
+  Space,
+  theme,
+} from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import { useState } from "react";
 import Logo from "../components/icons/Logo";
@@ -10,15 +20,18 @@ import {
   ShopOutlined,
   ProductOutlined,
   PercentageOutlined,
+  BellFilled,
 } from "@ant-design/icons";
+
+import { useLogout } from "../hooks/useLogout";
+
 const { Sider } = Layout;
 
 const Dashboard = () => {
   const { user } = useAuthStore();
+  const { logoutUser } = useLogout();
 
   const [collapsed, setCollapsed] = useState(false);
-
-  if (user === null) return <Navigate to="auth/login" replace={true} />;
 
   const items = [
     {
@@ -52,6 +65,8 @@ const Dashboard = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  if (user === null) return <Navigate to="auth/login" replace={true} />;
+
   return (
     <>
       <Layout style={{ minHeight: "100vh", background: colorBgContainer }}>
@@ -72,13 +87,48 @@ const Dashboard = () => {
           />
         </Sider>
         <Layout>
-          <Header style={{ padding: 0, background: colorBgContainer }} />
+          <Header
+            style={{
+              padding: 0,
+              background: colorBgContainer,
+              paddingLeft: "1rem",
+              paddingRight: "1rem",
+            }}
+          >
+            <Flex gap="middle" align="start" justify="space-between">
+              <Badge text="Global" status="success" />
+
+              <Space size="middle">
+                <Badge dot={true}>
+                  <BellFilled />
+                </Badge>
+                <Dropdown
+                  menu={{
+                    items: [
+                      {
+                        key: "logout",
+                        label: "Logout",
+                        onClick: () => logoutUser(),
+                      },
+                    ],
+                  }}
+                  placement="bottomRight"
+                  arrow={{ pointAtCenter: true }}
+                >
+                  <Avatar
+                    style={{
+                      backgroundColor: "#fde3cf",
+                      color: "#f56a00",
+                    }}
+                  />
+                </Dropdown>
+              </Space>
+            </Flex>
+          </Header>
           <Content style={{ margin: "1rem" }}>
             <Outlet />
           </Content>
-          <Footer style={{ textAlign: "center" }}>
-            Ant Design ©{new Date().getFullYear()} Created by Ant UED
-          </Footer>
+          <Footer style={{ textAlign: "center" }}>Footer</Footer>
         </Layout>
       </Layout>{" "}
     </>

@@ -97,11 +97,7 @@ const Dashboard = () => {
           >
             <Flex gap="middle" align="start" justify="space-between">
               <Badge
-                text={
-                  user.role === Role.ADMIN
-                    ? "ADMIN"
-                    : user.tenant?.name || "GLOBAL"
-                }
+                text={user.role === Role.ADMIN ? "ADMIN" : user.tenant?.name}
                 status="success"
               />
 
@@ -132,7 +128,7 @@ const Dashboard = () => {
               </Space>
             </Flex>
           </Header>
-          <Content style={{ margin: "1rem" }}>
+          <Content style={{ margin: "2rem" }}>
             <Outlet />
           </Content>
           <Footer style={{ textAlign: "center" }}>Footer</Footer>

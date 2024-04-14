@@ -1,5 +1,5 @@
 import { NavLink, Navigate, Outlet } from "react-router-dom";
-import { useAuthStore } from "../store";
+import { Role, useAuthStore } from "../store";
 
 import {
   Avatar,
@@ -96,7 +96,14 @@ const Dashboard = () => {
             }}
           >
             <Flex gap="middle" align="start" justify="space-between">
-              <Badge text="Global" status="success" />
+              <Badge
+                text={
+                  user.role === Role.ADMIN
+                    ? "ADMIN"
+                    : user.tenant?.name || "GLOBAL"
+                }
+                status="success"
+              />
 
               <Space size="middle">
                 <Badge dot={true}>

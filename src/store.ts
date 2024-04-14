@@ -7,12 +7,19 @@ export enum Role {
   MANAGER = "manager",
 }
 
+export interface Tenant {
+  id: number;
+  name: string;
+  address: string;
+}
+
 export interface User {
   id: number;
   email: string;
   firstName: string;
   lastName: string;
   role: Role;
+  tenant?: Tenant;
 }
 
 interface AuthState {

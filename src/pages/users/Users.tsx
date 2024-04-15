@@ -4,11 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { Breadcrumb } from "antd";
 import { Link, Navigate } from "react-router-dom";
 import { users } from "../../http/api";
-import { Role, useAuthStore } from "../../store";
+import { Role, User, useAuthStore } from "../../store";
+import UsersFilter from "./UsersFilter";
+import { useState } from "react";
 
 const Users = () => {
   // current user
   const { user } = useAuthStore();
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+
   const getUsers = async () => {
     const { data } = await users();
 
@@ -22,17 +26,21 @@ const Users = () => {
 
   const massagedData =
     data &&
-    data.map((user: DataType) => {
-      return {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        address: user.address,
-        role: user.role,
-        createdAt: new Date(user.createdAt),
-      };
-    });
+    data
+      .filter((u: User) =>
+        selectedRole === null ? true : u.role === selectedRole
+      )
+      .map((user: DataType) => {
+        return {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          address: user.address,
+          role: user.role,
+          createdAt: new Date(user.createdAt),
+        };
+      });
 
   if (user?.role !== Role.ADMIN) {
     return <Navigate to="/" replace={true} />;
@@ -54,13 +62,19 @@ const Users = () => {
             ]}
           />
         </div>
+
         <div>
           {isLoading && <div>Loading ... </div>}
           {isError && (
             <Tag color="red">{`Cannot Retrieve Users.... Please Try Later`}</Tag>
           )}
-
-          <ul>{<Table columns={columns} dataSource={massagedData} />}</ul>
+          <Space size="large" direction="vertical" style={{ width: "100%" }}>
+            <UsersFilter
+              setSelectedRole={setSelectedRole}
+              selectedRole={selectedRole}
+            />
+            <Table columns={columns} dataSource={massagedData} />
+          </Space>
         </div>
       </Space>
     </>
@@ -108,7 +122,16 @@ const columns: TableProps<DataType>["columns"] = [
     key: "role",
     dataIndex: "role",
     render: (role) => (
-      <Tag color={role === Role.ADMIN ? "volcano" : "green"} key={role}>
+      <Tag
+        color={
+          role === Role.ADMIN
+            ? "volcano"
+            : role === Role.MANAGER
+            ? "geekblue"
+            : "green"
+        }
+        key={role}
+      >
         {role.toUpperCase()}
       </Tag>
     ),

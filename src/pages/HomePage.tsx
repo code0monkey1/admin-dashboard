@@ -1,4 +1,4 @@
-import { Button, Card, Col, Flex, Row, Typography } from "antd";
+import { Button, Card, Col, Flex, Row, Tag, Typography } from "antd";
 import { useAuthStore } from "../store";
 const { Title, Text } = Typography;
 import { ShoppingFilled, BarChartOutlined } from "@ant-design/icons";
@@ -221,15 +221,7 @@ const Order = (props: orderProps) => {
           }}
         >
           {" "}
-          <Button
-            style={{
-              backgroundColor: "#fde3cf",
-              color: "#f56a00",
-            }}
-            size="small"
-          >
-            {status}
-          </Button>
+          <Tag color="volcano">{status}</Tag>
         </div>
       </Flex>
     </Card>

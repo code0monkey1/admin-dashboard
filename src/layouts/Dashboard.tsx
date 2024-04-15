@@ -33,33 +33,45 @@ const Dashboard = () => {
 
   const [collapsed, setCollapsed] = useState(false);
 
-  const items = [
-    {
-      key: "/",
-      icon: <HomeOutlined />,
-      label: <NavLink to={"/"}>Home</NavLink>,
-    },
-    {
-      key: "/users",
-      icon: <UserOutlined />,
-      label: <NavLink to={"/users"}>Users</NavLink>,
-    },
-    {
-      key: "/restaurants",
-      icon: <ShopOutlined />,
-      label: <NavLink to={"/restaurants"}>Restaurants</NavLink>,
-    },
-    {
-      key: "/products",
-      icon: <ProductOutlined />,
-      label: <NavLink to={"/products"}>Products</NavLink>,
-    },
-    {
-      key: "/promos",
-      icon: <PercentageOutlined />,
-      label: <NavLink to={"/promos"}>Promos</NavLink>,
-    },
-  ];
+  const getMenuItems = (role: Role) => {
+    const baseItems = [
+      {
+        key: "/",
+        icon: <HomeOutlined />,
+        label: <NavLink to={"/"}>Home</NavLink>,
+      },
+
+      {
+        key: "/restaurants",
+        icon: <ShopOutlined />,
+        label: <NavLink to={"/restaurants"}>Restaurants</NavLink>,
+      },
+      {
+        key: "/products",
+        icon: <ProductOutlined />,
+        label: <NavLink to={"/products"}>Products</NavLink>,
+      },
+      {
+        key: "/promos",
+        icon: <PercentageOutlined />,
+        label: <NavLink to={"/promos"}>Promos</NavLink>,
+      },
+    ];
+
+    if (role === Role.ADMIN) {
+      const menu = [...baseItems];
+
+      menu.splice(1, 0, {
+        key: "/users",
+        icon: <UserOutlined />,
+        label: <NavLink to={"/users"}>Users</NavLink>,
+      });
+
+      return menu;
+    }
+
+    return baseItems;
+  };
 
   const {
     token: { colorBgContainer },
@@ -83,7 +95,7 @@ const Dashboard = () => {
             theme="light"
             defaultSelectedKeys={["/"]}
             mode="inline"
-            items={items}
+            items={getMenuItems(user.role)}
           />
         </Sider>
         <Layout>

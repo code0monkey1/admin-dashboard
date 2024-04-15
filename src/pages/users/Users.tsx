@@ -2,11 +2,13 @@ import { Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { Breadcrumb } from "antd";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { users } from "../../http/api";
-import { Role } from "../../store";
+import { Role, useAuthStore } from "../../store";
 
 const Users = () => {
+  // current user
+  const { user } = useAuthStore();
   const getUsers = async () => {
     const { data } = await users();
 
@@ -31,6 +33,11 @@ const Users = () => {
         createdAt: new Date(user.createdAt),
       };
     });
+
+  if (user?.role !== Role.ADMIN) {
+    return <Navigate to="/" replace={true} />;
+  }
+
   return (
     <>
       <Space size="large" direction="vertical" style={{ width: "100%" }}>

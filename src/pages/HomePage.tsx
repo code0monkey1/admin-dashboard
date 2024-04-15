@@ -113,14 +113,9 @@ function HomePage() {
       <div>
         <Title level={3}> {`Welcome, ${user?.firstName} 😁 `}</Title>
 
-        <Flex justify="space-between" gap={10}>
-          <div
-            style={{
-              width: "50%",
-              margin: "1rem",
-            }}
-          >
-            <Row gutter={12}>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Row gutter={[16, 16]}>
               <Col span={12}>
                 <Card
                   style={{ padding: "0.5rem" }}
@@ -153,34 +148,35 @@ function HomePage() {
                 ></Card>
               </Col>
             </Row>
-          </div>
-
-          <Flex style={{ width: "50%" }} justify="space-between">
-            <Card
-              style={{ width: "100%", padding: "1rem" }}
-              title={
-                <span>
-                  <ShoppingFilled style={{ marginRight: 8 }} />
-                  Recent Orders
-                </span>
-              }
-              bordered={false}
-            >
-              {orders
-                .map((order) => (
-                  <li key={order.id}>
-                    <Order {...order} />
-                  </li>
-                ))
-                .slice(0, 8)}
-              <div style={{ marginTop: 20 }}>
-                <Button type="link">
-                  <Link to="/orders">See all orders</Link>
-                </Button>
-              </div>
-            </Card>
-          </Flex>
-        </Flex>
+          </Col>
+          <Col span={12}>
+            <Row>
+              <Card
+                style={{ width: "100%", padding: "1rem" }}
+                title={
+                  <span>
+                    <ShoppingFilled style={{ marginRight: 8 }} />
+                    Recent Orders
+                  </span>
+                }
+                bordered={false}
+              >
+                {orders
+                  .map((order) => (
+                    <li key={order.id}>
+                      <Order {...order} />
+                    </li>
+                  ))
+                  .slice(0, 8)}
+                <div style={{ marginTop: 20 }}>
+                  <Button type="link">
+                    <Link to="/orders">See all orders</Link>
+                  </Button>
+                </div>
+              </Card>
+            </Row>
+          </Col>
+        </Row>
       </div>
     </>
   );

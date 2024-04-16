@@ -4,14 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { Breadcrumb } from "antd";
 import { Link, Navigate } from "react-router-dom";
 import { users } from "../../http/api";
-import { Role, User, useAuthStore } from "../../store";
+import { Role, useAuthStore } from "../../store";
 import UsersFilter from "./UsersFilter";
-import { useState } from "react";
+import { Status } from "../../types";
 
 const Users = () => {
-  // current user
   const { user } = useAuthStore();
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+
+  const onFilterChange = (filterName: string, filterValue: string) => {
+    console.log("Filter name is ", filterName);
+    console.log("Filter value is", filterValue);
+  };
 
   const getUsers = async () => {
     const { data } = await users();
@@ -26,21 +29,18 @@ const Users = () => {
 
   const massagedData =
     data &&
-    data
-      .filter((u: User) =>
-        selectedRole === null ? true : u.role === selectedRole
-      )
-      .map((user: DataType) => {
-        return {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          address: user.address,
-          role: user.role,
-          createdAt: new Date(user.createdAt),
-        };
-      });
+    data.map((user: DataType) => {
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        address: user.address,
+        role: user.role,
+        createdAt: new Date(user.createdAt),
+        status: Status.ACTIVE,
+      };
+    });
 
   if (user?.role !== Role.ADMIN) {
     return <Navigate to="/" replace={true} />;
@@ -69,11 +69,8 @@ const Users = () => {
             <Tag color="red">{`Cannot Retrieve Users.... Please Try Later`}</Tag>
           )}
           <Space size="large" direction="vertical" style={{ width: "100%" }}>
-            <UsersFilter
-              setSelectedRole={setSelectedRole}
-              selectedRole={selectedRole}
-            />
-            <Table columns={columns} dataSource={massagedData} />
+            <UsersFilter onFilterChange={onFilterChange} />
+            <Table columns={columns} dataSource={massagedData} rowKey={"id"} />
           </Space>
         </div>
       </Space>
@@ -88,7 +85,7 @@ interface DataType {
   lastName: string;
   email: string;
   address: string;
-  role: string;
+  role: Role;
   createdAt: Date;
 }
 

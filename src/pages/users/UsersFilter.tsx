@@ -1,52 +1,67 @@
-import { Col, Row, Input, Button, Select } from "antd";
+import { Col, Row, Input, Button, Select, Modal } from "antd";
 import Card from "antd/es/card/Card";
-const { Search } = Input;
 import { PlusOutlined } from "@ant-design/icons";
-
 import { Role } from "../../store";
+import { Status } from "../../types";
+import { useState } from "react";
 
 interface userFilterProps {
-  setSelectedRole: (role: Role) => void;
-  selectedRole: Role | null;
+  onFilterChange: (filterName: string, filterValue: string) => void;
 }
-export const UsersFilter = (props: userFilterProps) => {
-  const { setSelectedRole } = props;
-  const handleChange = (value: string) => {
-    setSelectedRole(value as Role);
-  };
+export const UsersFilter = ({ onFilterChange }: userFilterProps) => {
+  const [modalOpen, setModalOpen] = useState(false);
   return (
     <Card>
-      <Row gutter={16} justify="space-around">
+      <Row justify="space-around">
         <Col span={12}>
-          <Row gutter={10} justify="space-between">
-            <Col span={8}>
+          <Row>
+            <Col span={12}>
               {" "}
-              <Search
+              <Input.Search
                 placeholder="input search text"
-                // onSearch={onSearch}
+                onChange={(e) =>
+                  onFilterChange("UserSearchQuery", e.target.value)
+                }
               />
+              <Modal
+                title="Add User"
+                centered
+                open={modalOpen}
+                onOk={() => setModalOpen(false)}
+                onCancel={() => setModalOpen(false)}
+              >
+                <p>some contents...</p>
+                <p>some contents...</p>
+                <p>some contents...</p>
+              </Modal>
             </Col>
-            <Col span={8} style={{ textAlign: "right" }}>
+            <Col span={6} style={{ textAlign: "right" }}>
               {" "}
               <Select
                 placeholder="Filter By Role"
-                onChange={handleChange}
+                allowClear
+                onChange={(selectedItem) =>
+                  onFilterChange("RoleFilter", selectedItem)
+                }
                 options={[
-                  { value: "admin", label: "Admin" },
-                  { value: "customer", label: "Customer" },
-                  { value: "manager", label: "Manager" },
+                  { value: Role.ADMIN, label: Role.ADMIN.toUpperCase() },
+                  { value: Role.CUSTOMER, label: Role.CUSTOMER.toUpperCase() },
+                  { value: Role.MANAGER, label: Role.MANAGER.toUpperCase() },
                 ]}
               />
             </Col>
-            <Col span={8} style={{ textAlign: "right" }}>
+            <Col span={6} style={{ textAlign: "right" }}>
               {" "}
               <Select
-                placeholder="Filter By Role"
-                onChange={handleChange}
+                placeholder="Filter By Status"
+                allowClear
+                onChange={(selectedItem) =>
+                  onFilterChange("StatusFilter", selectedItem)
+                }
                 options={[
-                  { value: "admin", label: "Admin" },
-                  { value: "customer", label: "Customer" },
-                  { value: "manager", label: "Manager" },
+                  { value: Status.ACTIVE, label: Status.ACTIVE },
+                  { value: Status.INACTIVE, label: Status.INACTIVE },
+                  { value: Status.BLOCKED, label: Status.BLOCKED },
                 ]}
               />
             </Col>
@@ -54,7 +69,11 @@ export const UsersFilter = (props: userFilterProps) => {
         </Col>
 
         <Col span={12} style={{ textAlign: "right" }}>
-          <Button type="primary" icon={<PlusOutlined />}>
+          <Button
+            type="primary"
+            onClick={() => setModalOpen(true)}
+            icon={<PlusOutlined />}
+          >
             Add User
           </Button>
         </Col>

@@ -1,4 +1,4 @@
-import { Space, Table, Tag } from "antd";
+import { Button, Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { Breadcrumb } from "antd";
@@ -7,6 +7,9 @@ import { users } from "../../http/api";
 import { Role, useAuthStore } from "../../store";
 import UsersFilter from "./UsersFilter";
 import { Status } from "../../types";
+import { useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import AddUserDrawer from "./AddUserDrawer";
 
 const Users = () => {
   const { user } = useAuthStore();
@@ -14,6 +17,16 @@ const Users = () => {
   const onFilterChange = (filterName: string, filterValue: string) => {
     console.log("Filter name is ", filterName);
     console.log("Filter value is", filterValue);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
   };
 
   const getUsers = async () => {
@@ -63,13 +76,23 @@ const Users = () => {
           />
         </div>
 
+        <AddUserDrawer open={open} showDrawer={showDrawer} onClose={onClose} />
+
         <div>
           {isLoading && <div>Loading ... </div>}
           {isError && (
             <Tag color="red">{`Cannot Retrieve Users.... Please Try Later`}</Tag>
           )}
           <Space size="large" direction="vertical" style={{ width: "100%" }}>
-            <UsersFilter onFilterChange={onFilterChange} />
+            <UsersFilter onFilterChange={onFilterChange}>
+              <Button
+                type="primary"
+                onClick={showDrawer}
+                icon={<PlusOutlined />}
+              >
+                Add User
+              </Button>
+            </UsersFilter>
             <Table columns={columns} dataSource={massagedData} rowKey={"id"} />
           </Space>
         </div>

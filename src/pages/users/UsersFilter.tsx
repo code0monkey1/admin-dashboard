@@ -1,15 +1,13 @@
-import { Col, Row, Input, Button, Select, Modal } from "antd";
+import { Col, Row, Input, Select } from "antd";
 import Card from "antd/es/card/Card";
-import { PlusOutlined } from "@ant-design/icons";
 import { Role } from "../../store";
 import { Status } from "../../types";
-import { useState } from "react";
 
 interface userFilterProps {
   onFilterChange: (filterName: string, filterValue: string) => void;
+  children: React.ReactNode;
 }
-export const UsersFilter = ({ onFilterChange }: userFilterProps) => {
-  const [modalOpen, setModalOpen] = useState(false);
+export const UsersFilter = ({ onFilterChange, children }: userFilterProps) => {
   return (
     <Card>
       <Row justify="space-around">
@@ -23,17 +21,6 @@ export const UsersFilter = ({ onFilterChange }: userFilterProps) => {
                   onFilterChange("UserSearchQuery", e.target.value)
                 }
               />
-              <Modal
-                title="Add User"
-                centered
-                open={modalOpen}
-                onOk={() => setModalOpen(false)}
-                onCancel={() => setModalOpen(false)}
-              >
-                <p>some contents...</p>
-                <p>some contents...</p>
-                <p>some contents...</p>
-              </Modal>
             </Col>
             <Col span={6} style={{ textAlign: "right" }}>
               {" "}
@@ -67,15 +54,8 @@ export const UsersFilter = ({ onFilterChange }: userFilterProps) => {
             </Col>
           </Row>
         </Col>
-
         <Col span={12} style={{ textAlign: "right" }}>
-          <Button
-            type="primary"
-            onClick={() => setModalOpen(true)}
-            icon={<PlusOutlined />}
-          >
-            Add User
-          </Button>
+          {children}
         </Col>
       </Row>{" "}
     </Card>

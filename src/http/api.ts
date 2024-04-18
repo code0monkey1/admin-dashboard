@@ -9,3 +9,6 @@ export const login = (credentials: Credentials) =>
 export const self = () => api.get("/auth/self");
 export const logout = () => api.post("/auth/logout");
 export const users = () => api.get("/users");
+
+// Restaurant Service
+export const getTenants = () => api.get("/tenants");

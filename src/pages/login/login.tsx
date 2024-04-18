@@ -35,6 +35,7 @@ const LoginPage = () => {
   });
 
   const { logoutUser } = useLogout();
+
   const { mutate, isPending, isError, error } = useMutation({
     mutationKey: ["login"],
     mutationFn: login,

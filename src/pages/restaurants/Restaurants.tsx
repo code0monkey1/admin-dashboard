@@ -4,10 +4,10 @@ import { Breadcrumb, Button, Space, Table, TableProps, Tag } from "antd";
 import { Role, Tenant, useAuthStore } from "../../store";
 import { useState } from "react";
 import { Navigate, Link } from "react-router-dom";
-import AddUserDrawer from "../users/AddUserDrawer";
 import UsersFilter from "../users/UsersFilter";
 import { PlusOutlined } from "@ant-design/icons";
 import { Status } from "../../types";
+import AddRestaurantDrawer from "./AddRestaurantDrawer";
 
 export const Restaurants = () => {
   const [open, setOpen] = useState(false);
@@ -71,7 +71,11 @@ export const Restaurants = () => {
           />
         </div>
 
-        <AddUserDrawer open={open} showDrawer={showDrawer} onClose={onClose} />
+        <AddRestaurantDrawer
+          open={open}
+          showDrawer={showDrawer}
+          onClose={onClose}
+        />
 
         <div>
           {isLoading && <div>Loading ... </div>}

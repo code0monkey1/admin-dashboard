@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { getTenants } from "../../http/api";
 import { Breadcrumb, Button, Space, Table, TableProps, Tag } from "antd";
-import { Role, Tenant, useAuthStore } from "../../store";
+import { Tenant } from "../../store";
 import { useState } from "react";
-import { Navigate, Link } from "react-router-dom";
-import UsersFilter from "../users/UsersFilter";
+import { Link } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
-import { Status } from "../../types";
 import AddRestaurantDrawer from "./AddRestaurantDrawer";
+import { RestaurantsFilter } from "./RestaurantsFilter";
 
 export const Restaurants = () => {
   const [open, setOpen] = useState(false);
@@ -19,7 +18,6 @@ export const Restaurants = () => {
     setOpen(false);
   };
 
-  const { user } = useAuthStore();
   const getRestaurants = async () => {
     const { data } = await getTenants();
 
@@ -35,9 +33,6 @@ export const Restaurants = () => {
     staleTime: Infinity,
   });
 
-  if (user?.role !== Role.ADMIN) {
-    return <Navigate to="/" replace={true} />;
-  }
   const onFilterChange = (filterName: string, filterValue: string) => {
     console.log("Filter name is ", filterName);
     console.log("Filter value is", filterValue);
@@ -51,7 +46,6 @@ export const Restaurants = () => {
         name: restaurant.name,
         address: restaurant.address,
         createdAt: new Date(restaurant.createdAt),
-        status: Status.ACTIVE,
       };
     });
   return (
@@ -83,7 +77,7 @@ export const Restaurants = () => {
             <Tag color="red">{`Cannot Retrieve Users.... Please Try Later`}</Tag>
           )}
           <Space size="large" direction="vertical" style={{ width: "100%" }}>
-            <UsersFilter onFilterChange={onFilterChange}>
+            <RestaurantsFilter onFilterChange={onFilterChange}>
               <Button
                 type="primary"
                 onClick={showDrawer}
@@ -91,7 +85,7 @@ export const Restaurants = () => {
               >
                 Add Restaurant
               </Button>
-            </UsersFilter>
+            </RestaurantsFilter>
             <Table columns={columns} dataSource={massagedData} rowKey={"id"} />
           </Space>
         </div>
@@ -125,29 +119,10 @@ const columns: TableProps<DataType>["columns"] = [
     defaultSortOrder: "descend",
   },
   {
-    title: "Name",
+    title: "Restaurant",
     dataIndex: "name",
     key: "name",
     render: (text) => <a>{`${text.toUpperCase()}`}</a>,
-  },
-  {
-    title: "Status",
-    key: "status",
-    dataIndex: "status",
-    render: (status) => (
-      <Tag
-        color={
-          status === Status.ACTIVE
-            ? "volcano"
-            : status === Role.MANAGER
-            ? "geekblue"
-            : "green"
-        }
-        key={status}
-      >
-        {status.toUpperCase()}
-      </Tag>
-    ),
   },
 ];
 

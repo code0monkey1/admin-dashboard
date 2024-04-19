@@ -3,7 +3,7 @@ import type { TableProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { Breadcrumb } from "antd";
 import { Link, Navigate } from "react-router-dom";
-import { users } from "../../http/api";
+import { getUsers } from "../../http/api";
 import { Role, useAuthStore } from "../../store";
 import UsersFilter from "./UsersFilter";
 import { Status } from "../../types";
@@ -29,15 +29,15 @@ const Users = () => {
     setOpen(false);
   };
 
-  const getUsers = async () => {
-    const { data } = await users();
+  const fetchUsers = async () => {
+    const { data } = await getUsers();
 
     return data;
   };
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["users"],
-    queryFn: getUsers,
+    queryFn: fetchUsers,
   });
 
   const massagedData =

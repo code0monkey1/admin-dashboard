@@ -89,9 +89,15 @@ const UserForm = () => {
                     rules={[{ required: true, message: "Role is required" }]}
                   >
                     <Select>
-                      <Select.Option value="admin">Admin</Select.Option>
-                      <Select.Option value="manager">Manager</Select.Option>
-                      <Select.Option value="customer">Customer</Select.Option>
+                      <Select.Option key="admin" value="admin">
+                        Admin
+                      </Select.Option>
+                      <Select.Option key="manager" value="manager">
+                        Manager
+                      </Select.Option>
+                      <Select.Option key="customer" value="customer">
+                        Customer
+                      </Select.Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -101,6 +107,7 @@ const UserForm = () => {
                     name="tenantId"
                     rules={[
                       { required: true, message: "Restaurant is required" },
+                      { type: "number", message: "Restaurant should be valid" },
                     ]}
                   >
                     <Select>
@@ -112,7 +119,7 @@ const UserForm = () => {
                       {isLoading && <div>Loading Restaurants... </div>}
                       {restaurants &&
                         restaurants.map((t: Tenant) => (
-                          <Select.Option key={t.id} value={t.name}>
+                          <Select.Option key={t.id} value={t.id}>
                             {t.name}
                           </Select.Option>
                         ))}

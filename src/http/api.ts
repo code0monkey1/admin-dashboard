@@ -1,3 +1,4 @@
+import { User } from "../store";
 import { Credentials } from "../types";
 import { api } from "./client";
 
@@ -9,6 +10,8 @@ export const login = (credentials: Credentials) =>
 export const self = () => api.get("/auth/self");
 export const logout = () => api.post("/auth/logout");
 export const getUsers = () => api.get("/users");
+
+export const createUser = (user: User) => api.post("/users", user);
 
 // Restaurant Service
 export const getTenants = () => api.get("/tenants");

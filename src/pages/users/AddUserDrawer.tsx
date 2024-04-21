@@ -1,5 +1,6 @@
 import { Button, Drawer, Form, Space, theme } from "antd";
 import UserForm from "./forms/UserForm";
+import { useCreateUser } from "../../hooks/useCreateUser";
 
 interface AddUserDrawerProps {
   open: boolean;
@@ -7,14 +8,32 @@ interface AddUserDrawerProps {
   onClose: () => void;
 }
 
-const AddUserDrawer = ({ open, showDrawer, onClose }: AddUserDrawerProps) => {
+const AddUserDrawer = ({ open, onClose, showDrawer }: AddUserDrawerProps) => {
+  const [form] = Form.useForm();
+
+  //create user mutation
+  const { createNewUser } = useCreateUser();
+
+  const handleFormSubmit = () => {
+    form.validateFields();
+
+    console.log(JSON.stringify(form.getFieldsValue(), null, 2));
+    createNewUser(form.getFieldsValue());
+    showDrawer();
+    //clear the cache for users
+    form.resetFields();
+    onClose();
+  };
   const {
     token: { colorBgLayout },
   } = theme.useToken();
   return (
     <Drawer
       open={open}
-      onClose={onClose}
+      onClose={() => {
+        form.resetFields();
+        onClose();
+      }}
       title="Create User"
       width={720}
       styles={{
@@ -25,14 +44,21 @@ const AddUserDrawer = ({ open, showDrawer, onClose }: AddUserDrawerProps) => {
       }}
       extra={
         <Space>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button type="primary" onClick={showDrawer}>
+          <Button
+            onClick={() => {
+              form.resetFields();
+              onClose();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button type="primary" onClick={handleFormSubmit}>
             Submit
           </Button>
         </Space>
       }
     >
-      <Form layout="vertical">
+      <Form form={form} layout="vertical">
         <UserForm />
       </Form>
     </Drawer>

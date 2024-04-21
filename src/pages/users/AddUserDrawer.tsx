@@ -14,8 +14,8 @@ const AddUserDrawer = ({ open, onClose, showDrawer }: AddUserDrawerProps) => {
   //create user mutation
   const { createNewUser } = useCreateUser();
 
-  const handleFormSubmit = () => {
-    form.validateFields();
+  const handleFormSubmit = async () => {
+    await form.validateFields();
 
     console.log(JSON.stringify(form.getFieldsValue(), null, 2));
     createNewUser(form.getFieldsValue());

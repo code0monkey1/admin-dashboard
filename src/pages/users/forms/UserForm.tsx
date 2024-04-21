@@ -73,6 +73,16 @@ const UserForm = () => {
                     name="password"
                     rules={[
                       { required: true, message: "Password is required" },
+                      {
+                        validator: (_, value) => {
+                          if (value && value.length < 8) {
+                            return Promise.reject(
+                              "Password should be at least 8 characters long"
+                            );
+                          }
+                          return Promise.resolve();
+                        },
+                      },
                     ]}
                   >
                     <Input type="password" />

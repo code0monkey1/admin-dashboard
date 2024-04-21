@@ -14,7 +14,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ConfigProvider
-        theme={{ token: { colorPrimary: "#F65F42", colorLink: "#F65F42" } }}
+        theme={{
+          token: {
+            colorPrimary: "#F65F42",
+            colorLink: "#F65F42",
+          },
+        }}
       >
         <RouterProvider router={router} />
       </ConfigProvider>

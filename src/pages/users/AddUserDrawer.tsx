@@ -1,4 +1,5 @@
-import { Button, Drawer, Space } from "antd";
+import { Button, Drawer, Form, Space, theme } from "antd";
+import UserForm from "./forms/UserForm";
 
 interface AddUserDrawerProps {
   open: boolean;
@@ -7,6 +8,9 @@ interface AddUserDrawerProps {
 }
 
 const AddUserDrawer = ({ open, showDrawer, onClose }: AddUserDrawerProps) => {
+  const {
+    token: { colorBgLayout },
+  } = theme.useToken();
   return (
     <Drawer
       open={open}
@@ -16,6 +20,7 @@ const AddUserDrawer = ({ open, showDrawer, onClose }: AddUserDrawerProps) => {
       styles={{
         body: {
           paddingBottom: 80,
+          background: colorBgLayout,
         },
       }}
       extra={
@@ -26,7 +31,11 @@ const AddUserDrawer = ({ open, showDrawer, onClose }: AddUserDrawerProps) => {
           </Button>
         </Space>
       }
-    ></Drawer>
+    >
+      <Form layout="vertical">
+        <UserForm />
+      </Form>
+    </Drawer>
   );
 };
 
